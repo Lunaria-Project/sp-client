@@ -24,5 +24,12 @@ public class JsonDataRepositoryMenu
             EditorUtility.DisplayDialog("JSON Repo", $"경로가 저장되었습니다:\n{picked}", "OK");
         }
     }
+
+    [MenuItem("Tools/Data Import/Generate Data from JSON Repository", priority = 10)]
+    public static void TestLoad()
+    {
+        DataCodeGenerator.GenerateGameDataCode();
+        DataCodeGenerator.GenerateEnumDataCode();
+    }
 }
 #endif
