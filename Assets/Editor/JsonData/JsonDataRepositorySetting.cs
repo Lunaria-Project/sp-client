@@ -1,19 +1,13 @@
 #if UNITY_EDITOR
-using UnityEditor;
+using System.IO;
+using UnityEngine;
 
 public static class JsonDataRepositorySetting
 {
-    private const string EditorPrefsKey = "JSON_REPO_PATH";
-
     public static string GetRepoPath()
     {
-        return EditorPrefs.GetString(EditorPrefsKey, string.Empty);
-    }
-
-    public static void SetRepoPath(string path)
-    {
-        if (string.IsNullOrEmpty(path)) return;
-        EditorPrefs.SetString(EditorPrefsKey, path);
+        var projectRoot = Directory.GetParent(Application.dataPath)?.FullName ?? string.Empty;
+        return Path.Combine(projectRoot, "lunaria-data-json");
     }
 }
 #endif
