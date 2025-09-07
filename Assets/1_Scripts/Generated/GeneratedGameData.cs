@@ -1,8 +1,6 @@
-using System;
-
 namespace Generated
 {
-    public class MapData
+    public partial class MapData
     {
         public string MapResourceKey { get; private set; }
 
@@ -12,7 +10,7 @@ namespace Generated
         }
     }
 
-    public class TestData
+    public partial class TestData
     {
         public int Id { get; private set; }
         public string Name { get; private set; }

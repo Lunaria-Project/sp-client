@@ -44,8 +44,6 @@ public static partial class DataCodeGenerator
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("using System;");
-        sb.AppendLine();
         sb.AppendLine($"namespace {OutputNamespace}");
         sb.AppendLine("{");
 
@@ -55,7 +53,7 @@ public static partial class DataCodeGenerator
             
             var className = sheet.SheetName;
 
-            sb.AppendIndentedLine($"public class {className}", 1);
+            sb.AppendIndentedLine($"public partial class {className}", 1);
             sb.AppendIndentedLine("{", 1);
 
             for (var i = 0; i < sheet.ColumnNames.Length; i++)
