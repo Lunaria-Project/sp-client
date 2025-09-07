@@ -12,6 +12,7 @@ public static partial class DataCodeGenerator
     private const string GameDataPath = "Assets/1_Scripts/Generated/GeneratedGameData.cs";
     private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
     private const string EnumData = "EnumData";
+    private const string KeyColumn = ";key";
 
     private static readonly Dictionary<string, string> TypeMap = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -67,9 +68,10 @@ public static partial class DataCodeGenerator
             {
                 var colName = sheet.ColumnNames[i];
                 var rawType = sheet.ColumnTypes[i]?.Trim();
-                var isEnum = string.Equals(rawType, "enum", StringComparison.OrdinalIgnoreCase);
+                var trimmedColumnType = rawType?.Replace(KeyColumn, string.Empty);
+                var isEnum = string.Equals(trimmedColumnType, "enum", StringComparison.OrdinalIgnoreCase);
 
-                var csType = isEnum ? sheet.ColumnNames[i] : (TypeMap.GetValueOrDefault(rawType ?? "", "string"));
+                var csType = isEnum ? sheet.ColumnNames[i] : (TypeMap.GetValueOrDefault(trimmedColumnType ?? "", "string"));
 
                 sb.AppendIndentedLine($"public {csType} {colName} {{ get; private set; }}", 2);
             }
@@ -110,8 +112,33 @@ public static partial class DataCodeGenerator
             var className = sheet.SheetName;
             var isEnum = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
             if (isEnum) continue;
-            sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 2);
-            sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 2);
+
+            var (HasKeyColumn, KeyColumnName) = (false, string.Empty);
+            for (var i = 0; i < sheet.ColumnNames.Length; i++)
+            {
+                var colName = sheet.ColumnNames[i];
+                var rawType = sheet.ColumnTypes[i]?.Trim();
+                if (rawType != null && rawType.Contains(KeyColumn))
+                {
+                    HasKeyColumn = true;
+                    KeyColumnName = colName;
+                }
+            }
+
+            if (HasKeyColumn)
+            {
+                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}, key: {KeyColumnName}", 2);
+                sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> DT{className} = new();", 2);
+                sb.AppendIndentedLine($"public bool TryGet{className}(int key, out {className} result) => DT{className}.TryGetValue(key, out result);", 2);
+                sb.AppendIndentedLine($"public bool Contains{className}(int key) => DT{className}.ContainsKey(key);", 2);
+            }
+            else
+            {
+                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}", 2);
+                sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 2);
+                sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 2);
+            }
+
             sb.AppendLine();
         }
 
@@ -128,9 +155,10 @@ public static partial class DataCodeGenerator
         {
             var rawName = sheet.ColumnNames[i];
             var rawType = sheet.ColumnTypes[i]?.Trim();
-            var isEnum = string.Equals(rawType, "enum", StringComparison.OrdinalIgnoreCase);
+            var trimmedColumnType = rawType?.Replace(KeyColumn, string.Empty);
+            var isEnum = string.Equals(trimmedColumnType, "enum", StringComparison.OrdinalIgnoreCase);
 
-            var csType = isEnum ? rawName : (TypeMap.GetValueOrDefault(rawType ?? "", "string"));
+            var csType = isEnum ? rawName : (TypeMap.GetValueOrDefault(trimmedColumnType ?? "", "string"));
 
             parts.Add($"{csType} {ToCamelCase(rawName)}");
         }

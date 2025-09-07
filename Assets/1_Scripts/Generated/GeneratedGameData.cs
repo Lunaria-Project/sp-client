@@ -1,5 +1,21 @@
 namespace Generated
 {
+    public partial class KeyTestData
+    {
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public float Hp { get; private set; }
+        public ColorType ColorType { get; private set; }
+
+        public KeyTestData(int id, string name, float hp, ColorType colorType)
+        {
+            Id = id;
+            Name = name;
+            Hp = hp;
+            ColorType = colorType;
+        }
+    }
+
     public partial class MapData
     {
         public string MapResourceKey { get; private set; }
