@@ -10,6 +10,8 @@ public static partial class DataCodeGenerator
 {
     private const string OutputNamespace = "Generated";
     private const string GameDataPath = "Assets/1_Scripts/Generated/GeneratedGameData.cs";
+    private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
+    private const string EnumData = "EnumData";
 
     private static readonly Dictionary<string, string> TypeMap = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -32,6 +34,11 @@ public static partial class DataCodeGenerator
             WriteFile(GameDataPath, dataCode);
 
             Debug.Log($"[GameDataCodeGenerator] Generated: {GameDataPath}");
+
+            var dataGetterCode = GenerateDataGetterCode(sheets);
+            WriteFile(GameGetterDataPath, dataGetterCode);
+
+            Debug.Log($"[GameDataCodeGenerator] Generated: {GameGetterDataPath}");
         }
         catch (Exception e)
         {
@@ -50,7 +57,7 @@ public static partial class DataCodeGenerator
         foreach (var sheet in sheets)
         {
             if (sheet.FileName == EnumDataFileName) continue;
-            
+
             var className = sheet.SheetName;
 
             sb.AppendIndentedLine($"public partial class {className}", 1);
@@ -84,6 +91,33 @@ public static partial class DataCodeGenerator
         }
 
         sb.AppendLine("}");
+        return sb.ToString();
+    }
+
+    private static string GenerateDataGetterCode(List<SheetInfo> sheets)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine();
+        sb.AppendLine($"namespace {OutputNamespace}");
+        sb.AppendLine("{");
+        sb.AppendIndentedLine("public partial class GameData", 1);
+        sb.AppendIndentedLine("{", 1);
+
+        foreach (var sheet in sheets)
+        {
+            var className = sheet.SheetName;
+            var isEnum = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
+            if (isEnum) continue;
+            sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 2);
+            sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 2);
+            sb.AppendLine();
+        }
+
+        sb.AppendIndentedLine("}", 1);
+        sb.AppendLine("}");
+
         return sb.ToString();
     }
 
