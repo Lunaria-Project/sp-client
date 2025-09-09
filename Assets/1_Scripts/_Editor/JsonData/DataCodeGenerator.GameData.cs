@@ -13,6 +13,7 @@ public static partial class DataCodeGenerator
     private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
     private const string EnumData = "EnumData";
     private const string KeyColumn = ";key";
+    private const string IdColumn = ";id";
 
     private static readonly Dictionary<string, string> TypeMap = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -67,11 +68,10 @@ public static partial class DataCodeGenerator
             for (var i = 0; i < sheet.ColumnNames.Length; i++)
             {
                 var colName = sheet.ColumnNames[i];
-                var rawType = sheet.ColumnTypes[i]?.Trim();
-                var trimmedColumnType = rawType?.Replace(KeyColumn, string.Empty);
-                var isEnum = string.Equals(trimmedColumnType, "enum", StringComparison.OrdinalIgnoreCase);
+                var columnType = GetColumnType(sheet.ColumnTypes[i]);
+                var isEnum = string.Equals(columnType, "enum", StringComparison.OrdinalIgnoreCase);
 
-                var csType = isEnum ? sheet.ColumnNames[i] : (TypeMap.GetValueOrDefault(trimmedColumnType ?? "", "string"));
+                var csType = isEnum ? sheet.ColumnNames[i] : (TypeMap.GetValueOrDefault(columnType ?? "", "string"));
 
                 sb.AppendIndentedLine($"public {csType} {colName} {{ get; private set; }}", 2);
             }
@@ -116,8 +116,7 @@ public static partial class DataCodeGenerator
             for (var i = 0; i < sheet.ColumnNames.Length; i++)
             {
                 var colName = sheet.ColumnNames[i];
-                var rawType = sheet.ColumnTypes[i]?.Trim();
-                if (rawType != null && rawType.Contains(KeyColumn))
+                if (sheet.ColumnTypes[i] != null && sheet.ColumnTypes[i].Contains(KeyColumn))
                 {
                     HasKeyColumn = true;
                     KeyColumnName = colName;
@@ -130,14 +129,12 @@ public static partial class DataCodeGenerator
                 sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> DT{className} = new();", 1);
                 sb.AppendIndentedLine($"public bool TryGet{className}(int key, out {className} result) => DT{className}.TryGetValue(key, out result);", 1);
                 sb.AppendIndentedLine($"public bool Contains{className}(int key) => DT{className}.ContainsKey(key);", 1);
-                sb.AppendIndentedLine($"public void Add{className}({className} row) => DT{className}[row.{KeyColumnName}] = row;", 1);
             }
             else
             {
                 sb.AppendIndentedLine($"// {sheet.SheetName} - {className}", 1);
                 sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 1);
                 sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 1);
-                sb.AppendIndentedLine($"public void Add{className}({className} row) => DT{className}.Add(row);", 1);
             }
 
             sb.AppendLine();
@@ -154,12 +151,10 @@ public static partial class DataCodeGenerator
         for (var i = 0; i < sheet.ColumnNames.Length; i++)
         {
             var rawName = sheet.ColumnNames[i];
-            var rawType = sheet.ColumnTypes[i]?.Trim();
-            var trimmedColumnType = rawType?.Replace(KeyColumn, string.Empty);
-            var isEnum = string.Equals(trimmedColumnType, "enum", StringComparison.OrdinalIgnoreCase);
+            var columnType = GetColumnType(sheet.ColumnTypes[i]);
+            var isEnum = string.Equals(columnType, "enum", StringComparison.OrdinalIgnoreCase);
 
-            var csType = isEnum ? rawName : (TypeMap.GetValueOrDefault(trimmedColumnType ?? "", "string"));
-
+            var csType = isEnum ? rawName : (TypeMap.GetValueOrDefault(columnType ?? "", "string"));
             parts.Add($"{csType} {ToCamelCase(rawName)}");
         }
 
@@ -171,6 +166,14 @@ public static partial class DataCodeGenerator
         if (string.IsNullOrEmpty(name)) return name;
         if (name.Length == 1) return name.ToLowerInvariant();
         return char.ToLowerInvariant(name[0]) + name.Substring(1);
+    }
+
+    private static string GetColumnType(string rawType)
+    {
+        rawType = rawType.Trim();
+        rawType = rawType?.Replace(KeyColumn, string.Empty);
+        rawType = rawType?.Replace(IdColumn, string.Empty);
+        return rawType;
     }
 
     private static void WriteFile(string path, string content)
