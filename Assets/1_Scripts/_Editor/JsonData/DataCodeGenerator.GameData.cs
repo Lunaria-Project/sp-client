@@ -101,11 +101,10 @@ public static partial class DataCodeGenerator
         var sb = new StringBuilder();
 
         sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using Generated;");
         sb.AppendLine();
-        sb.AppendLine($"namespace {OutputNamespace}");
+        sb.AppendLine("public partial class GameData");
         sb.AppendLine("{");
-        sb.AppendIndentedLine("public partial class GameData", 1);
-        sb.AppendIndentedLine("{", 1);
 
         foreach (var sheet in sheets)
         {
@@ -127,22 +126,23 @@ public static partial class DataCodeGenerator
 
             if (HasKeyColumn)
             {
-                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}, key: {KeyColumnName}", 2);
-                sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> DT{className} = new();", 2);
-                sb.AppendIndentedLine($"public bool TryGet{className}(int key, out {className} result) => DT{className}.TryGetValue(key, out result);", 2);
-                sb.AppendIndentedLine($"public bool Contains{className}(int key) => DT{className}.ContainsKey(key);", 2);
+                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}, key: {KeyColumnName}", 1);
+                sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> DT{className} = new();", 1);
+                sb.AppendIndentedLine($"public bool TryGet{className}(int key, out {className} result) => DT{className}.TryGetValue(key, out result);", 1);
+                sb.AppendIndentedLine($"public bool Contains{className}(int key) => DT{className}.ContainsKey(key);", 1);
+                sb.AppendIndentedLine($"public void Add{className}({className} row) => DT{className}[row.{KeyColumnName}] = row;", 1);
             }
             else
             {
-                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}", 2);
-                sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 2);
-                sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 2);
+                sb.AppendIndentedLine($"// {sheet.SheetName} - {className}", 1);
+                sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 1);
+                sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 1);
+                sb.AppendIndentedLine($"public void Add{className}({className} row) => DT{className}.Add(row);", 1);
             }
 
             sb.AppendLine();
         }
 
-        sb.AppendIndentedLine("}", 1);
         sb.AppendLine("}");
 
         return sb.ToString();

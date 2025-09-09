@@ -1,21 +1,18 @@
 using System.Collections.Generic;
+using Generated;
 
-namespace Generated
+public partial class GameData
 {
-    public partial class GameData
-    {
-        // KeyTestData - KeyTestData, key: Id
-        private readonly Dictionary<int, KeyTestData> DTKeyTestData = new();
-        public bool TryGetKeyTestData(int key, out KeyTestData result) => DTKeyTestData.TryGetValue(key, out result);
-        public bool ContainsKeyTestData(int key) => DTKeyTestData.ContainsKey(key);
+    // KeyTestData - KeyTestData
+    private readonly List<KeyTestData> DTKeyTestData = new();
+    public List<KeyTestData> GetKeyTestDataList => DTKeyTestData;
 
-        // MapData - MapData
-        private readonly List<MapData> DTMapData = new();
-        public List<MapData> GetMapDataList => DTMapData;
+    // MapData - MapData
+    private readonly List<MapData> DTMapData = new();
+    public List<MapData> GetMapDataList => DTMapData;
 
-        // TestData - TestData
-        private readonly List<TestData> DTTestData = new();
-        public List<TestData> GetTestDataList => DTTestData;
+    // TestData - TestData
+    private readonly List<TestData> DTTestData = new();
+    public List<TestData> GetTestDataList => DTTestData;
 
-    }
 }
