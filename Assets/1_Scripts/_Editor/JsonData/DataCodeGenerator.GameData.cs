@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -11,6 +12,7 @@ public static partial class DataCodeGenerator
     private const string OutputNamespace = "Generated";
     private const string GameDataPath = "Assets/1_Scripts/Generated/GeneratedGameData.cs";
     private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
+    private const string DataLoaderPath = "Assets/1_Scripts/Generated/GameData.Loader.cs";
     private const string EnumData = "EnumData";
     private const string KeyColumn = ";key";
     private const string IdColumn = ";id";
@@ -39,6 +41,9 @@ public static partial class DataCodeGenerator
 
             var dataGetterCode = GenerateDataGetterCode(sheets);
             WriteFile(GameGetterDataPath, dataGetterCode);
+
+            var dataLoaderCode = GenerateDataLoaderCode(sheets);
+            WriteFile(DataLoaderPath, dataLoaderCode);
 
             Debug.Log($"[GameDataCodeGenerator] Generated: {GameGetterDataPath}");
         }
@@ -89,7 +94,7 @@ public static partial class DataCodeGenerator
 
             sb.AppendIndentedLine("}", 2);
             sb.AppendIndentedLine("}", 1);
-            
+
             if (i != sheets.Count - 1)
             {
                 sb.AppendLine();
@@ -114,20 +119,11 @@ public static partial class DataCodeGenerator
         {
             var sheet = sheets[i];
             var className = sheet.SheetName;
-            var isEnum = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
-            if (isEnum) continue;
+            var isEnumData = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
+            if (isEnumData) continue;
 
-            var (HasKeyColumn, KeyColumnName) = (false, string.Empty);
-            for (var j = 0; j < sheet.ColumnNames.Length; j++)
-            {
-                var colName = sheet.ColumnNames[j];
-                if (sheet.ColumnTypes[j] != null && sheet.ColumnTypes[j].Contains(KeyColumn))
-                {
-                    HasKeyColumn = true;
-                    KeyColumnName = colName;
-                }
-            }
-
+            var keyIndex = FindKeyIndex(sheet);
+            var (HasKeyColumn, KeyColumnName) = (keyIndex >= 0, keyIndex >= 0 ? sheet.ColumnNames[keyIndex] : string.Empty);
             if (HasKeyColumn)
             {
                 sb.AppendIndentedLine($"// {sheet.SheetName} - {className}, key: {KeyColumnName}", 1);
@@ -148,6 +144,87 @@ public static partial class DataCodeGenerator
                 sb.AppendLine();
             }
         }
+
+        sb.AppendLine("}");
+
+        return sb.ToString();
+    }
+
+    private static string GenerateDataLoaderCode(List<SheetInfo> sheets)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("using System;");
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using Generated;");
+        sb.AppendLine();
+        sb.AppendLine("public partial class GameData");
+        sb.AppendLine("{");
+
+        foreach (var sheet in sheets)
+        {
+            var className = sheet.SheetName;
+            var fieldName = "_dt" + className;
+
+            var isEnumData = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
+            if (isEnumData) continue;
+
+            var keyIndex = FindKeyIndex(sheet);
+            var (HasKeyColumn, KeyColumnName) = (keyIndex >= 0, keyIndex >= 0 ? sheet.ColumnNames[keyIndex] : string.Empty);
+
+            var args = new List<string>(sheet.ColumnNames.Length);
+            for (var i = 0; i < sheet.ColumnNames.Length; i++)
+            {
+                var columnType = GetColumnType(sheet.ColumnTypes[i]);
+                var isEnum = string.Equals(columnType, "enum", StringComparison.OrdinalIgnoreCase);
+                if (isEnum)
+                {
+                    var columnName = sheet.ColumnNames[i];
+                    args.Add($"({columnName})Enum.Parse(typeof({columnName}), (string)row[{i}], true)");
+                }
+                else
+                {
+                    var csType = TypeMap.GetValueOrDefault(columnType ?? "", "string");
+                    var arg = CastExpr(csType, $"row[{i}]");
+                    args.Add(arg);
+                }
+            }
+
+            sb.AppendIndentedLine($"private void Load{className}(List<object[]> rows)", 1);
+            sb.AppendIndentedLine("{", 1);
+            sb.AppendIndentedLine("if (rows.IsNullOrEmpty()) return;", 2);
+            sb.AppendIndentedLine("foreach (var row in rows)", 2);
+            sb.AppendIndentedLine("{", 2);
+
+            sb.AppendIndentedLine($"var newData = new {className}({string.Join(", ", args)});", 3);
+
+            if (HasKeyColumn)
+            {
+                sb.AppendIndentedLine($"{fieldName}.Add(newData.{KeyColumnName}, newData);", 3);
+            }
+            else
+            {
+                sb.AppendIndentedLine($"{fieldName}.Add(newData);", 3);
+            }
+
+            sb.AppendIndentedLine("}", 2);
+            sb.AppendIndentedLine("}", 1);
+            sb.AppendLine();
+        }
+
+        sb.AppendIndentedLine("private void InvokeLoadForSheet(string sheetName, List<object[]> rows)", 1);
+        sb.AppendIndentedLine("{", 1);
+        sb.AppendIndentedLine("switch (sheetName)", 2);
+        sb.AppendIndentedLine("{", 2);
+        foreach (var sheet in sheets.Select(s => s.SheetName).Distinct())
+        {
+            var isEnumData = string.Equals(sheet, EnumData, StringComparison.OrdinalIgnoreCase);
+            if (isEnumData) continue;
+            sb.AppendIndentedLine($"case \"{sheet}\": Load{sheet}(rows); break;", 3);
+        }
+
+        sb.AppendIndentedLine("}", 2);
+        sb.AppendIndentedLine("}", 1);
 
         sb.AppendLine("}");
 
@@ -183,6 +260,33 @@ public static partial class DataCodeGenerator
         rawType = rawType?.Replace(KeyColumn, string.Empty);
         rawType = rawType?.Replace(IdColumn, string.Empty);
         return rawType;
+    }
+
+    private static int FindKeyIndex(SheetInfo sheet)
+    {
+        for (var j = 0; j < sheet.ColumnNames.Length; j++)
+        {
+            if (sheet.ColumnTypes[j] != null && sheet.ColumnTypes[j].Contains(KeyColumn))
+            {
+                return j;
+            }
+        }
+
+        return -1;
+    }
+
+    private static string CastExpr(string csType, string srcExpr)
+    {
+        return csType switch
+        {
+            "int" => $"Convert.ToInt32({srcExpr})",
+            "long" => $"Convert.ToInt64({srcExpr})",
+            "float" => $"Convert.ToSingle({srcExpr})",
+            "double" => $"Convert.ToDouble({srcExpr})",
+            "bool" => $"Convert.ToBoolean({srcExpr})",
+            "string" => $"({srcExpr} as string) ?? string.Empty",
+            _ => $"{srcExpr}"
+        };
     }
 
     private static void WriteFile(string path, string content)
