@@ -3,16 +3,17 @@ using Generated;
 
 public partial class GameData
 {
-    // KeyTestData - KeyTestData
-    private readonly List<KeyTestData> DTKeyTestData = new();
-    public List<KeyTestData> GetKeyTestDataList => DTKeyTestData;
+    // KeyTestData - KeyTestData, key: Id
+    public IReadOnlyDictionary<int, KeyTestData> DTKeyTestData => _dtKeyTestData;
+    public bool TryGetKeyTestData(int key, out KeyTestData result) => DTKeyTestData.TryGetValue(key, out result);
+    public bool ContainsKeyTestData(int key) => DTKeyTestData.ContainsKey(key);
+    private readonly Dictionary<int, KeyTestData> _dtKeyTestData = new();
 
     // MapData - MapData
-    private readonly List<MapData> DTMapData = new();
-    public List<MapData> GetMapDataList => DTMapData;
+    public IReadOnlyList<MapData> DTMapData => _dtMapData;
+    private List<MapData> _dtMapData = new();
 
     // TestData - TestData
-    private readonly List<TestData> DTTestData = new();
-    public List<TestData> GetTestDataList => DTTestData;
-
+    public IReadOnlyList<TestData> DTTestData => _dtTestData;
+    private List<TestData> _dtTestData = new();
 }

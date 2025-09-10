@@ -56,8 +56,9 @@ public static partial class DataCodeGenerator
         sb.AppendLine($"namespace {OutputNamespace}");
         sb.AppendLine("{");
 
-        foreach (var sheet in sheets)
+        for (var i = 0; i < sheets.Count; i++)
         {
+            var sheet = sheets[i];
             if (sheet.FileName == EnumDataFileName) continue;
 
             var className = sheet.SheetName;
@@ -65,13 +66,13 @@ public static partial class DataCodeGenerator
             sb.AppendIndentedLine($"public partial class {className}", 1);
             sb.AppendIndentedLine("{", 1);
 
-            for (var i = 0; i < sheet.ColumnNames.Length; i++)
+            for (var j = 0; j < sheet.ColumnNames.Length; j++)
             {
-                var colName = sheet.ColumnNames[i];
-                var columnType = GetColumnType(sheet.ColumnTypes[i]);
+                var colName = sheet.ColumnNames[j];
+                var columnType = GetColumnType(sheet.ColumnTypes[j]);
                 var isEnum = string.Equals(columnType, "enum", StringComparison.OrdinalIgnoreCase);
 
-                var csType = isEnum ? sheet.ColumnNames[i] : (TypeMap.GetValueOrDefault(columnType ?? "", "string"));
+                var csType = isEnum ? sheet.ColumnNames[j] : (TypeMap.GetValueOrDefault(columnType ?? "", "string"));
 
                 sb.AppendIndentedLine($"public {csType} {colName} {{ get; private set; }}", 2);
             }
@@ -87,9 +88,12 @@ public static partial class DataCodeGenerator
             }
 
             sb.AppendIndentedLine("}", 2);
-
             sb.AppendIndentedLine("}", 1);
-            sb.AppendLine();
+            
+            if (i != sheets.Count - 1)
+            {
+                sb.AppendLine();
+            }
         }
 
         sb.AppendLine("}");
@@ -106,17 +110,18 @@ public static partial class DataCodeGenerator
         sb.AppendLine("public partial class GameData");
         sb.AppendLine("{");
 
-        foreach (var sheet in sheets)
+        for (var i = 0; i < sheets.Count; i++)
         {
+            var sheet = sheets[i];
             var className = sheet.SheetName;
             var isEnum = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
             if (isEnum) continue;
 
             var (HasKeyColumn, KeyColumnName) = (false, string.Empty);
-            for (var i = 0; i < sheet.ColumnNames.Length; i++)
+            for (var j = 0; j < sheet.ColumnNames.Length; j++)
             {
-                var colName = sheet.ColumnNames[i];
-                if (sheet.ColumnTypes[i] != null && sheet.ColumnTypes[i].Contains(KeyColumn))
+                var colName = sheet.ColumnNames[j];
+                if (sheet.ColumnTypes[j] != null && sheet.ColumnTypes[j].Contains(KeyColumn))
                 {
                     HasKeyColumn = true;
                     KeyColumnName = colName;
@@ -126,18 +131,22 @@ public static partial class DataCodeGenerator
             if (HasKeyColumn)
             {
                 sb.AppendIndentedLine($"// {sheet.SheetName} - {className}, key: {KeyColumnName}", 1);
-                sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> DT{className} = new();", 1);
+                sb.AppendIndentedLine($"public IReadOnlyDictionary<int, {className}> DT{className} => _dt{className};", 1);
                 sb.AppendIndentedLine($"public bool TryGet{className}(int key, out {className} result) => DT{className}.TryGetValue(key, out result);", 1);
                 sb.AppendIndentedLine($"public bool Contains{className}(int key) => DT{className}.ContainsKey(key);", 1);
+                sb.AppendIndentedLine($"private readonly Dictionary<int, {className}> _dt{className} = new();", 1);
             }
             else
             {
                 sb.AppendIndentedLine($"// {sheet.SheetName} - {className}", 1);
-                sb.AppendIndentedLine($"private readonly List<{className}> DT{className} = new();", 1);
-                sb.AppendIndentedLine($"public List<{className}> Get{className}List => DT{className};", 1);
+                sb.AppendIndentedLine($"public IReadOnlyList<{className}> DT{className} => _dt{className};", 1);
+                sb.AppendIndentedLine($"private List<{className}> _dt{className} = new();", 1);
             }
 
-            sb.AppendLine();
+            if (i != sheets.Count - 1)
+            {
+                sb.AppendLine();
+            }
         }
 
         sb.AppendLine("}");

@@ -41,5 +41,4 @@ namespace Generated
             ColorType = colorType;
         }
     }
-
 }
