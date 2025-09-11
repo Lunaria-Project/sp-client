@@ -4,6 +4,16 @@ using Generated;
 
 public partial class GameData
 {
+    private void LoadItemData(List<object[]> rows)
+    {
+        if (rows.IsNullOrEmpty()) return;
+        foreach (var row in rows)
+        {
+            var newData = new ItemData(Convert.ToInt32(row[0]), (row[1] as string) ?? string.Empty, (row[2] as string) ?? string.Empty);
+            _dtItemData.Add(newData.Id, newData);
+        }
+    }
+
     private void LoadKeyTestData(List<object[]> rows)
     {
         if (rows.IsNullOrEmpty()) return;
@@ -38,6 +48,7 @@ public partial class GameData
     {
         switch (sheetName)
         {
+            case "ItemData": LoadItemData(rows); break;
             case "KeyTestData": LoadKeyTestData(rows); break;
             case "MapData": LoadMapData(rows); break;
             case "TestData": LoadTestData(rows); break;
