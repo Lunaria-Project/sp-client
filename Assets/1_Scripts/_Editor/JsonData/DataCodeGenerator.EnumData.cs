@@ -11,12 +11,10 @@ public static partial class DataCodeGenerator
     private const string EnumDataPath = "Assets/1_Scripts/Generated/GeneratedEnumData.cs";
     private const string EnumDataFileName = "EnumData";
 
-    public static void GenerateEnumDataCode()
+    public static void GenerateEnumDataCode(List<SheetInfo> sheets)
     {
         try
         {
-            var sheets = JsonDataLoader.LoadAllSheets();
-
             var enumCode = GenerateEnumCode(sheets);
             WriteFile(EnumDataPath, enumCode);
 
@@ -35,7 +33,7 @@ public static partial class DataCodeGenerator
             .Where(s => string.Equals(s.FileName, "EnumData", StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        var byEnum = new Dictionary<string, List<(string Name, string? DisplayName, string? ResourceKey)>>(StringComparer.Ordinal);
+        var byEnum = new Dictionary<string, List<(string Name, string DisplayName, string ResourceKey)>>(StringComparer.Ordinal);
 
         foreach (var sheet in enumSheets)
         {
@@ -64,7 +62,7 @@ public static partial class DataCodeGenerator
                 var rkey = (idxResKey >= 0 && idxResKey < row.Length) ? row[idxResKey]?.ToString() : null;
 
                 if (!byEnum.TryGetValue(enumName, out var list))
-                    byEnum[enumName] = list = new List<(string, string?, string?)>();
+                    byEnum[enumName] = list = new List<(string, string, string)>();
 
                 list.Add((value.Trim(), string.IsNullOrWhiteSpace(disp) ? null : disp.Trim(),
                     string.IsNullOrWhiteSpace(rkey) ? null : rkey.Trim()));

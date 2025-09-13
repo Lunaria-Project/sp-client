@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public partial class GameData : Singleton<GameData>
-{ 
+{
     public void LoadGameData()
     {
 #if UNITY_EDITOR

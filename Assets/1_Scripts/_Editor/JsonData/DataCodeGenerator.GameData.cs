@@ -13,7 +13,6 @@ public static partial class DataCodeGenerator
     private const string GameDataPath = "Assets/1_Scripts/Generated/GeneratedGameData.cs";
     private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
     private const string DataLoaderPath = "Assets/1_Scripts/Generated/GameData.Loader.cs";
-    private const string EnumData = "EnumData";
     private const string KeyColumn = ";key";
     private const string IdColumn = ";id";
 
@@ -28,12 +27,10 @@ public static partial class DataCodeGenerator
         // "enum" 은 별도 처리
     };
 
-    public static void GenerateGameDataCode()
+    public static void GenerateGameDataCode(List<SheetInfo> sheets)
     {
         try
         {
-            var sheets = JsonDataLoader.LoadAllSheets();
-
             var dataCode = GenerateDataCode(sheets);
             WriteFile(GameDataPath, dataCode);
 
@@ -64,9 +61,9 @@ public static partial class DataCodeGenerator
         for (var i = 0; i < sheets.Count; i++)
         {
             var sheet = sheets[i];
-            if (sheet.FileName == EnumDataFileName) continue;
 
             var className = sheet.SheetName;
+            if (!CanGenerateCode(className)) continue;
 
             sb.AppendIndentedLine($"public partial class {className}", 1);
             sb.AppendIndentedLine("{", 1);
@@ -119,8 +116,7 @@ public static partial class DataCodeGenerator
         {
             var sheet = sheets[i];
             var className = sheet.SheetName;
-            var isEnumData = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
-            if (isEnumData) continue;
+            if (!CanGenerateCode(className)) continue;
 
             var keyIndex = FindKeyIndex(sheet);
             var (HasKeyColumn, KeyColumnName) = (keyIndex >= 0, keyIndex >= 0 ? sheet.ColumnNames[keyIndex] : string.Empty);
@@ -166,8 +162,7 @@ public static partial class DataCodeGenerator
             var className = sheet.SheetName;
             var fieldName = "_dt" + className;
 
-            var isEnumData = string.Equals(className, EnumData, StringComparison.OrdinalIgnoreCase);
-            if (isEnumData) continue;
+            if (!CanGenerateCode(className)) continue;
 
             var keyIndex = FindKeyIndex(sheet);
             var (HasKeyColumn, KeyColumnName) = (keyIndex >= 0, keyIndex >= 0 ? sheet.ColumnNames[keyIndex] : string.Empty);
@@ -218,8 +213,7 @@ public static partial class DataCodeGenerator
         sb.AppendIndentedLine("{", 2);
         foreach (var sheet in sheets.Select(s => s.SheetName).Distinct())
         {
-            var isEnumData = string.Equals(sheet, EnumData, StringComparison.OrdinalIgnoreCase);
-            if (isEnumData) continue;
+            if (!CanGenerateCode(sheet)) continue;
             sb.AppendIndentedLine($"case \"{sheet}\": Load{sheet}(rows); break;", 3);
         }
 
@@ -245,6 +239,13 @@ public static partial class DataCodeGenerator
         }
 
         return string.Join(", ", parts);
+    }
+
+    private static bool CanGenerateCode(string sheetName)
+    {
+        var isEnumData = string.Equals(sheetName, EnumDataFileName, StringComparison.OrdinalIgnoreCase);
+        var isGameSettingData = string.Equals(sheetName, GameSettingDataFileName, StringComparison.OrdinalIgnoreCase);
+        return !isEnumData && !isGameSettingData;
     }
 
     private static string ToCamelCase(string name)
