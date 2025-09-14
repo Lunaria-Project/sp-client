@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public partial class GameData : Singleton<GameData>
@@ -16,10 +17,23 @@ public partial class GameData : Singleton<GameData>
             Debug.LogWarning("[GameDataRuntimeLoader] No sheets found.");
             return;
         }
+        
+        const string EnumDataFileName = "EnumData";
+        const string GameSettingDataFileName = "GameSettingData";
 
         foreach (var sheetInfo in sheets)
         {
+            var isEnumData = string.Equals(sheetInfo.SheetName, EnumDataFileName, StringComparison.OrdinalIgnoreCase);
+            if (isEnumData) continue;
+            var isGameSettingData = string.Equals(sheetInfo.SheetName, GameSettingDataFileName, StringComparison.OrdinalIgnoreCase);
+            if (isGameSettingData)
+            {
+                GameSetting.Instance.InvokeLoadForSheet(sheetInfo);
+                continue;
+            }
             InvokeLoadForSheet(sheetInfo.SheetName, sheetInfo.Rows);
         }
+
+        var a = GameSetting.Instance.SecondsPerGameHour;
     }
 }

@@ -9,6 +9,7 @@ public class JsonDataRepositoryMenu
         var sheets = JsonDataLoader.LoadAllSheets();
         DataCodeGenerator.GenerateGameDataCode(sheets);
         DataCodeGenerator.GenerateEnumDataCode(sheets);
+        DataCodeGenerator.GenerateGameSettingCode(sheets);
     }
 }
 #endif
