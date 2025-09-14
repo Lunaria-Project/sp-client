@@ -33,7 +33,5 @@ public partial class GameData : Singleton<GameData>
             }
             InvokeLoadForSheet(sheetInfo.SheetName, sheetInfo.Rows);
         }
-
-        var a = GameSetting.Instance.SecondsPerGameHour;
     }
 }
