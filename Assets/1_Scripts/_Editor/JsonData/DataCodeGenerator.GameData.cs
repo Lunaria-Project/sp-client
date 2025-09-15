@@ -34,7 +34,7 @@ public static partial class DataCodeGenerator
             var dataCode = GenerateDataCode(sheets);
             WriteFile(GameDataPath, dataCode);
 
-            Debug.Log($"[GameDataCodeGenerator] Generated: {GameDataPath}");
+            LogManager.Log($"[GameDataCodeGenerator] Generated: {GameDataPath}");
 
             var dataGetterCode = GenerateDataGetterCode(sheets);
             WriteFile(GameGetterDataPath, dataGetterCode);
@@ -42,11 +42,11 @@ public static partial class DataCodeGenerator
             var dataLoaderCode = GenerateDataLoaderCode(sheets);
             WriteFile(DataLoaderPath, dataLoaderCode);
 
-            Debug.Log($"[GameDataCodeGenerator] Generated: {GameGetterDataPath}");
+            LogManager.Log($"[GameDataCodeGenerator] Generated: {GameGetterDataPath}");
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            LogManager.LogException(e);
             EditorUtility.DisplayDialog("GameData Generation Error", e.Message, "OK");
         }
     }

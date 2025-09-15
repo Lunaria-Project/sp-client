@@ -18,15 +18,15 @@ public static partial class DataCodeGenerator
                 if (!string.Equals(sheet.SheetName, GameSettingDataFileName, StringComparison.OrdinalIgnoreCase)) continue;
                 var dataCode = GenerateSettingCode(sheet.Rows);
                 WriteFile(GameSettingDataPath, dataCode);
-                Debug.Log($"[GameDataCodeGenerator] Generated: {GameSettingDataPath}");
+                LogManager.Log($"[GameDataCodeGenerator] Generated: {GameSettingDataPath}");
                 return;
             }
 
-            Debug.LogError("[GameDataCodeGenerator] Failed: GameSettingData 파일을 찾을 수 없습니다.");
+            LogManager.LogError("[GameDataCodeGenerator] Failed: GameSettingData 파일을 찾을 수 없습니다.");
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            LogManager.LogException(e);
             EditorUtility.DisplayDialog("GameData Generation Error", e.Message, "OK");
         }
     }

@@ -22,7 +22,7 @@ public static class JsonDataLoader
         var repoPath = Path.Combine(JsonDataRepositorySetting.GetRepoPath(), "data");
         if (string.IsNullOrEmpty(repoPath) || !Directory.Exists(repoPath))
         {
-            Debug.LogError($"JSON repo not found: {repoPath}");
+            LogManager.LogError($"JSON repo not found: {repoPath}");
             return list;
         }
         

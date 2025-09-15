@@ -18,11 +18,11 @@ public static partial class DataCodeGenerator
             var enumCode = GenerateEnumCode(sheets);
             WriteFile(EnumDataPath, enumCode);
 
-            Debug.Log($"[GameDataCodeGenerator] Generated: {EnumDataPath}");
+            LogManager.Log($"[GameDataCodeGenerator] Generated: {EnumDataPath}");
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            LogManager.LogException(e);
             EditorUtility.DisplayDialog("GameData Generation Error", e.Message, "OK");
         }
     }
@@ -45,7 +45,7 @@ public static partial class DataCodeGenerator
 
             if (idxEnumName < 0 || idxValue < 0)
             {
-                Debug.LogWarning($"[EnumGen] Sheet '{sheet.SheetName}' is missing EnumName/Value columns. Skipped.");
+                LogManager.LogWarning($"[EnumGen] Sheet '{sheet.SheetName}' is missing EnumName/Value columns. Skipped.");
                 continue;
             }
 

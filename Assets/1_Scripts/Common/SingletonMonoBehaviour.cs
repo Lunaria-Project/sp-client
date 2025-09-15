@@ -13,7 +13,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : SingletonMonoBe
     {
         if (_isDestroyed)
         {
-            Debug.Log($"Singleton {typeof(T)} is Destroyed");
+            LogManager.Log($"Singleton {typeof(T)} is Destroyed");
             return null;
         }
 
@@ -39,7 +39,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : SingletonMonoBe
         }
         else if (_instance != this)
         {
-            Debug.LogErrorFormat("Instance already exists {0}", this);
+            LogManager.LogErrorFormat("Instance already exists {0}", this);
             Destroy(gameObject);
         }
     }
