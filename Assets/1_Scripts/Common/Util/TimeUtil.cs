@@ -1,25 +1,29 @@
 using System.Text;
+using UnityEngine;
 
 public struct GameTime
 {
-    public int HoursForUI { get; private set; }
-    public int Hours { get; private set; }
-    public int Minutes { get; private set; }
     public long TotalSeconds { get; private set; }
     public bool IsAM { get; private set; }
+    public int HoursForUI { get; private set; }
+    public int MinutesForUI { get; private set; }
 
     public void SetTime(long timeSeconds)
     {
-        Minutes = TimeUtil.SecondsToMinutes(timeSeconds);
-        Hours = TimeUtil.MinutesToHours(Minutes);
-        HoursForUI = Hours;
         TotalSeconds = timeSeconds;
-        IsAM = true;
 
-        if (Hours <= TimeUtil.HoursPerHalfDay) return;
-        
-        HoursForUI -= TimeUtil.HoursPerHalfDay;
-        IsAM = false;
+        var totalMinutes = TimeUtil.SecondsToMinutes(TotalSeconds);
+        var hours = TimeUtil.MinutesToHours(totalMinutes) % TimeUtil.HoursPerDay;
+
+        IsAM = hours < TimeUtil.HoursPerHalfDay;
+        HoursForUI = hours switch
+        {
+            0 => TimeUtil.HoursPerHalfDay,
+            < TimeUtil.HoursPerHalfDay => hours,
+            TimeUtil.HoursPerHalfDay => TimeUtil.HoursPerHalfDay,
+            _ => hours - TimeUtil.HoursPerHalfDay
+        };
+        MinutesForUI = totalMinutes % TimeUtil.MinutesPerHour;
     }
 }
 
@@ -48,7 +52,22 @@ public static class TimeUtil
     public static string GameTimeToString(GameTime @this)
     {
         Sb.Clear();
-        Sb.AppendFormat(TimeFormat, @this.Hours, @this.Minutes);
+        var hours = SecondsToHours(@this.TotalSeconds);
+        var minutes = SecondsToMinutes(@this.TotalSeconds) % MinutesPerHour;
+        Sb.AppendFormat(TimeFormat, hours, minutes);
         return Sb.ToString();
+    }
+
+    public static string GameTimeToStringForUI(GameTime @this)
+    {
+        Sb.Clear();
+        Sb.AppendFormat(TimeFormat, @this.HoursForUI, @this.MinutesForUI);
+        return Sb.ToString();
+    }
+
+    public static int GetTenMinuteIntervalIndex(long totalSecondsInDay)
+    {
+        var totalMinutes = Mathf.FloorToInt((float)totalSecondsInDay / SecondsPerMinute);
+        return totalMinutes / MinutesPerInterval;
     }
 }
