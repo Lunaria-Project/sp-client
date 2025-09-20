@@ -11,8 +11,8 @@ public static partial class DataCodeGenerator
 {
     private const string OutputNamespace = "Generated";
     private const string GameDataPath = "Assets/1_Scripts/Generated/GeneratedGameData.cs";
-    private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.Generated.cs";
-    private const string DataLoaderPath = "Assets/1_Scripts/Generated/GameData.Loader.cs";
+    private const string GameGetterDataPath = "Assets/1_Scripts/Generated/GameData.GeneratedClass.cs";
+    private const string DataLoaderPath = "Assets/1_Scripts/Generated/GameData.GeneratedLoader.cs";
     private const string KeyColumn = ";key";
     private const string IdColumn = ";id";
 
