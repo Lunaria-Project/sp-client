@@ -11,6 +11,7 @@ using Cysharp.Threading.Tasks.Internal;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#pragma warning disable CS0618
 namespace Cysharp.Threading.Tasks.Editor
 {
     public class UniTaskTrackerViewItem : TreeViewItem
@@ -180,3 +181,4 @@ namespace Cysharp.Threading.Tasks.Editor
 
 }
 
+#pragma warning restore CS0618
