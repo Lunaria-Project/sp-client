@@ -1,5 +1,6 @@
 namespace Generated
 {
+    [SerializeEnum]
     public enum ColorType
     {
         None = 0,

@@ -87,6 +87,7 @@ public static partial class DataCodeGenerator
                 .OrderBy(x => x.Name, StringComparer.Ordinal)
                 .ToList();
 
+            sb.AppendIndentedLine($"[SerializeEnum]", 1);
             sb.AppendIndentedLine($"public enum {enumName}", 1);
             sb.AppendIndentedLine("{", 1);
             sb.AppendIndentedLine("None = 0,", 2);
