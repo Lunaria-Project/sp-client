@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SerializedEnum Rules" ToolsVersion="10.0">
+  <Rules AnalyzerId="SerializedEnumAnalyzer" RuleNamespace="SerializedEnumAnalyzer">
+    <Rule Id="SP001" Action="Error" />
+    <Rule Id="SP002" Action="Error" />
+  </Rules>
+</RuleSet>
