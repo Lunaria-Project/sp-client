@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 32c1bc25199cb4580b8f9438d75df7f9
+timeCreated: 1564222221
+licenseType: Store
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 154682
+  packageName: UI Gradient Effect
+  packageVersion: 1.0
+  assetPath: Assets/P&C UI Gradient Effect/UI Gradient plugin/Resources/UIGradientShader.shader
+  uploadId: 440442

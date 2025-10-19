@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 20c369afd9a0d56429c7956080f34050
+timeCreated: 1567198169
+licenseType: Store
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 154682
+  packageName: UI Gradient Effect
+  packageVersion: 1.0
+  assetPath: Assets/P&C UI Gradient Effect/UI Gradient plugin/Resources/BlendModes.cginc
+  uploadId: 440442
