@@ -5,38 +5,53 @@ public class PlayerObject : CharacterObject
 {
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private Collider2D _collider2D;
-    
-    [Header("Move")]
-    [SerializeField] private float moveSpeed = 5f;          // units/sec
-    [SerializeField] private float shellRadius = 0.01f;     // 겹침 방지 보정
-    [SerializeField] private int maxSlideIterations = 3;    // 반복 충돌 처리 횟수
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private Sprite[] _frontSprites;
+    [SerializeField] private Sprite[] _backSprites;
 
-    [Header("Collision Filter")]
-    [SerializeField] private ContactFilter2D contactFilter; // 충돌 레이어/각도 설정
+    [Header("Move")] [SerializeField] private float moveSpeed = 5f; // units/sec
+    [SerializeField] private float shellRadius = 0.01f; // 겹침 방지 보정
+    [SerializeField] private int maxSlideIterations = 3; // 반복 충돌 처리 횟수
 
-    // 입력 누적
+    [Header("Animation")] [SerializeField] private float frameDuration = 0.12f; // 프레임당 시간
+
+    [Header("Collision Filter")] [SerializeField]
+    private ContactFilter2D contactFilter; // 충돌 레이어/각도 설정
+
     private Vector2 _input;
 
     private readonly RaycastHit2D[] _hitBuffer = new RaycastHit2D[8];
-    private readonly List<RaycastHit2D> _hitBufferList = new (8);
-
-    // 추가: 겹침 해소용 버퍼와 미세 푸시
+    private readonly List<RaycastHit2D> _hitBufferList = new(8);
     private readonly Collider2D[] _overlapBuffer = new Collider2D[8];
     private const float TinyPush = 0.0005f;
 
+    private enum Facing
+    {
+        Front,
+        Back
+    }
+
+    private Facing _facing = Facing.Front;
+    private int _frameIndex;
+    private float _frameTimer;
+    private bool _isMoving;
+
     private void Awake()
     {
-        // 권장 설정: Kinematic + Continuous
         _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
         _rigidbody2D.interpolation = RigidbodyInterpolation2D.Interpolate;
         _rigidbody2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        if (_spriteRenderer != null && _frontSprites.Length > 0)
+        {
+            _spriteRenderer.sprite = _frontSprites[0];
+        }
 
         LogManager.Log("CharacterManager ready");
     }
 
     private void Update()
     {
-        // 간단 입력. 필요시 외부에서 SetInput 호출 가능.
         var x = Input.GetAxisRaw("Horizontal");
         var y = Input.GetAxisRaw("Vertical");
         _input = new Vector2(x, y);
@@ -44,6 +59,8 @@ public class PlayerObject : CharacterObject
         {
             _input.Normalize();
         }
+
+        UpdateSpriteAnimation(Time.deltaTime);
     }
 
     private void FixedUpdate()
@@ -58,9 +75,6 @@ public class PlayerObject : CharacterObject
         MoveAndSlide(delta);
     }
 
-    /// <summary>
-    /// 외부 시스템(가상 조이스틱 등)에서 입력 주입용
-    /// </summary>
     public void SetInput(Vector2 input)
     {
         _input = input.sqrMagnitude > 1f ? input.normalized : input;
@@ -68,7 +82,6 @@ public class PlayerObject : CharacterObject
 
     private void MoveAndSlide(Vector2 delta)
     {
-        // 남은 이동량을 반복 처리. 충돌 시 노멀 방향 성분을 제거하여 벽을 따라 슬라이드.
         var remaining = delta;
         for (var i = 0; i < maxSlideIterations; i++)
         {
@@ -77,7 +90,6 @@ public class PlayerObject : CharacterObject
                 return;
             }
 
-            // 캐스트로 예상 충돌 탐지
             var distance = remaining.magnitude;
             var count = _rigidbody2D.Cast(remaining.normalized, contactFilter, _hitBuffer, distance + shellRadius);
 
@@ -89,19 +101,16 @@ public class PlayerObject : CharacterObject
 
             if (_hitBufferList.Count == 0)
             {
-                // 충돌 없음. 전부 이동.
                 _rigidbody2D.position += remaining;
-                Depenetrate(); // 이동 후 혹시 모를 겹침 해소
+                Depenetrate();
                 return;
             }
 
-            // 가장 가까운 히트 선택
             var minT = 1f;
             var bestHit = _hitBufferList[0];
             for (var h = 0; h < _hitBufferList.Count; h++)
             {
                 var hit = _hitBufferList[h];
-                // t ≈ (hit.distance - shell)/distance
                 var t = Mathf.Clamp01((hit.distance - shellRadius) / distance);
                 if (t < minT)
                 {
@@ -110,18 +119,15 @@ public class PlayerObject : CharacterObject
                 }
             }
 
-            // 가능한 만큼 전진
             var advance = remaining.normalized * (distance * minT);
             _rigidbody2D.position += advance;
-            Depenetrate(); // 곡면/모서리 끼임 방지
+            Depenetrate();
 
-            // 남은 이동에서 노멀 방향 성분 제거 => 벽을 따라 슬라이드
             var n = bestHit.normal;
             var v = remaining - advance;
             var slide = v - Vector2.Dot(v, n) * n;
-            slide += n * TinyPush; // 바깥으로 아주 살짝 띄워 재침투 방지
+            slide += n * TinyPush;
 
-            // 미세 진동 방지: 아주 작으면 종료
             if (slide.sqrMagnitude < 1e-6f)
             {
                 return;
@@ -131,7 +137,6 @@ public class PlayerObject : CharacterObject
         }
     }
 
-    // 추가: 겹침 탈출
     private void Depenetrate()
     {
         var count = _collider2D.OverlapCollider(contactFilter, _overlapBuffer);
@@ -143,11 +148,62 @@ public class PlayerObject : CharacterObject
                 continue;
             }
 
-            var d = _collider2D.Distance(other); // 내 콜라이더 기준 분리 정보
+            var d = _collider2D.Distance(other);
             if (d.isOverlapped)
             {
                 _rigidbody2D.position += d.normal * (d.distance + shellRadius * 0.5f);
             }
+        }
+    }
+
+    private void UpdateSpriteAnimation(float dt)
+    {
+        _isMoving = _input.sqrMagnitude > 0.0001f;
+
+        if (_input.y > 0.1f)
+        {
+            _facing = Facing.Back;
+        }
+        else if (_input.y < -0.1f)
+        {
+            _facing = Facing.Front;
+        }
+
+        if (_spriteRenderer == null)
+        {
+            return;
+        }
+
+        var frames = _facing == Facing.Front ? _frontSprites : _backSprites;
+        if (frames == null || frames.Length == 0)
+        {
+            return;
+        }
+
+        if (_isMoving)
+        {
+            _frameTimer += dt;
+            if (_frameTimer >= frameDuration)
+            {
+                _frameTimer -= frameDuration;
+                _frameIndex = (_frameIndex + 1) % frames.Length;
+            }
+        }
+        else
+        {
+            _frameIndex = 0;
+            _frameTimer = 0f;
+        }
+
+        _spriteRenderer.sprite = frames[_frameIndex];
+
+        if (_input.x < 0f)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        else if (_input.x >= 0f)
+        {
+            _spriteRenderer.flipX = false;
         }
     }
 }
