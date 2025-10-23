@@ -2,9 +2,9 @@ using UnityEditor;
 
 public static class DebugToolMenu
 {
-    private const string MenuPath = "Lunaria/Debug/Visualize Collider";
+    private const string ToggleVisualizeColliderMenuName = "Lunaria/Debug/Visualize Collider";
 
-    [MenuItem(MenuPath)]
+    [MenuItem(ToggleVisualizeColliderMenuName)]
     private static void ToggleVisualizeCollider()
     {
         var current = PlayerPrefsManager.GetBool(PrefKey.ColliderVisualize);
@@ -12,11 +12,11 @@ public static class DebugToolMenu
         LogManager.Log($"Collider Visualize set to {!current}");
     }
 
-    [MenuItem(MenuPath, true)]
+    [MenuItem(ToggleVisualizeColliderMenuName, true)]
     private static bool ToggleVisualizeColliderValidate()
     {
         var enabled = PlayerPrefsManager.GetBool(PrefKey.ColliderVisualize);
-        Menu.SetChecked(MenuPath, enabled);
+        Menu.SetChecked(ToggleVisualizeColliderMenuName, enabled);
         return true;
     }
 }

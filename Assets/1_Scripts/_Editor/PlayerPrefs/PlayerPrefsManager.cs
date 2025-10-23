@@ -18,7 +18,7 @@ public static class PlayerPrefsManager
 
     private static readonly Dictionary<PrefKey, int> DefaultMap = new()
     {
-        { PrefKey.ColliderVisualize, 1 },
+        { PrefKey.ColliderVisualize, 0 },
     };
 
     // -------- int --------
