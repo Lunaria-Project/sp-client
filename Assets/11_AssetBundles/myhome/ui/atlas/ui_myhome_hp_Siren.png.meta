@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 09c6bfae0c6aa41c6a65be0c6364f4d2
+guid: 16ea4890a20e44dbab082d22dc71b10c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 267978957292762215
-    second: ReferenceBG_0
+      213: -4165864866000876209
+    second: ui_myhome_hp_Siren_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ReferenceBG_0
+      name: ui_myhome_hp_Siren_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2420
-        height: 1362
+        width: 36
+        height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 764f6bc117d08b300800000000000000
-      internalID: 267978957292762215
+      spriteID: f4dccbfd9ffdf26c0800000000000000
+      internalID: -4165864866000876209
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ReferenceBG_0: 267978957292762215
+      ui_myhome_hp_Siren_0: -4165864866000876209
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

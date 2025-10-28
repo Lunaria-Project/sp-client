@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0e4147f280f1b4e7aae812ba67d0f139
+guid: 97c4441e12858429099cf18c7459767f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7986116639634812537
-    second: HP_Heart_Low20_0
+      213: 5226436256996457586
+    second: ui_round_glowbox_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 5, y: 5, z: 5, w: 5}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HP_Heart_Low20_0
+      name: ui_round_glowbox_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 96
-        height: 96
+        width: 20
+        height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 97ee44085c264de60800000000000000
-      internalID: 7986116639634812537
+      spriteID: 27cfe7bb518088840800000000000000
+      internalID: 5226436256996457586
       vertices: []
       indices: 
       edges: []
@@ -152,7 +152,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HP_Heart_Low20_0: 7986116639634812537
+      ui_round_glowbox_0: 5226436256996457586
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
