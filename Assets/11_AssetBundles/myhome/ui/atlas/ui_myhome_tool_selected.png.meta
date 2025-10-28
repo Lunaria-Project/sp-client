@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 951dd386116394d4fbd82079e27d6ddf
+guid: f207f2e4f02ea4ccf903f415cc2658da
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9058861000945768193
-    second: Deco_Bg_0
+      213: 5484025659779994170
+    second: ui_myhome_tool_selected_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Deco_Bg_0
+      name: ui_myhome_tool_selected_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 400
-        height: 400
+        width: 200
+        height: 220
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ff8ecf06ae5784280800000000000000
-      internalID: -9058861000945768193
+      spriteID: a32505e284c2b1c40800000000000000
+      internalID: 5484025659779994170
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Deco_Bg_0: -9058861000945768193
+      ui_myhome_tool_selected_0: 5484025659779994170
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

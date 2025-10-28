@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f688067bf6d654b22904e6dad19ad410
+guid: b7a59942a8f094f14a0031f345a36e27
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2725379591570828650
-    second: Round_GlowBox_0
+      213: -5758986618514906834
+    second: ui_deco_star_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 10, y: 10, z: 10, w: 10}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Round_GlowBox_0
+      name: ui_deco_star_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 20
-        height: 20
+        width: 72
+        height: 72
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 692525e73b18d2ad0800000000000000
-      internalID: -2725379591570828650
+      spriteID: e21e031de28f310b0800000000000000
+      internalID: -5758986618514906834
       vertices: []
       indices: 
       edges: []
@@ -152,7 +152,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Round_GlowBox_0: -2725379591570828650
+      ui_deco_star_0: -5758986618514906834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

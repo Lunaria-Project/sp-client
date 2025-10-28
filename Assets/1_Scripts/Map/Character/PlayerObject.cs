@@ -139,7 +139,7 @@ public class PlayerObject : CharacterObject
 
     private void Depenetrate()
     {
-        var count = _collider2D.OverlapCollider(contactFilter, _overlapBuffer);
+        var count = _collider2D.Overlap(contactFilter, _overlapBuffer);
         for (var i = 0; i < count; i++)
         {
             var other = _overlapBuffer[i];

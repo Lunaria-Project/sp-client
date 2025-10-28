@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 771fffc8eb584414a9aa1eadc79a821a
+guid: c115bfde34a6c4bb389de0f0427d456d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 223683260847442474
-    second: Img_Siren_0
+      213: 7850980306360038853
+    second: ui_myhome_hp_heart_Low20_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Img_Siren_0
+      name: ui_myhome_hp_heart_Low20_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 36
-        height: 26
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a2a43099dbeaa1300800000000000000
-      internalID: 223683260847442474
+      spriteID: 5c57d2b0ef844fc60800000000000000
+      internalID: 7850980306360038853
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Img_Siren_0: 223683260847442474
+      ui_myhome_hp_heart_Low20_0: 7850980306360038853
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

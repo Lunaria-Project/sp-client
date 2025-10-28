@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 54bab17e319a84c02b5d721f77f83251
+guid: 743c7b51efb8342de8f159a558ede451
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6983214153208932963
-    second: Simple_Box_0
+      213: 7706787291148527516
+    second: ui_myhome_hp_heart_Low50_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Simple_Box_0
+      name: ui_myhome_hp_heart_Low50_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2
-        height: 2
+        width: 160
+        height: 160
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 1, y: 1, z: 1, w: 1}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d95508fe9b3a61f90800000000000000
-      internalID: -6983214153208932963
+      spriteID: c972760853204fa60800000000000000
+      internalID: 7706787291148527516
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 7235fe02ea19549288969345167edf06
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Simple_Box_0: -6983214153208932963
+      ui_myhome_hp_heart_Low50_0: 7706787291148527516
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
