@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f6e6a644f5d42cb936db48b9e90420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderVisualizer
-  _gizmosColor: {r: 0, g: 1, b: 0.17089105, a: 0.65}
+  _gizmosColor: {r: 1, g: 0, b: 0, a: 0.65}
 --- !u!1 &2944025676871133758
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f6e6a644f5d42cb936db48b9e90420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderVisualizer
-  _gizmosColor: {r: 0, g: 1, b: 0.17254902, a: 0.65}
+  _gizmosColor: {r: 1, g: 0, b: 0, a: 0.65}
 --- !u!1 &4501653711213210055
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f6e6a644f5d42cb936db48b9e90420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderVisualizer
-  _gizmosColor: {r: 0, g: 1, b: 0.17254902, a: 0.65}
+  _gizmosColor: {r: 1, g: 0, b: 0, a: 0.65}
 --- !u!1 &4901425484667513758
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,8 +406,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1502358903
-  m_SortingLayer: 2
+  m_SortingLayerID: -1381873933
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -3500745949257197152, guid: a99c08f6c7a9249a397a712c13169cd4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -520,4 +520,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f6e6a644f5d42cb936db48b9e90420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderVisualizer
-  _gizmosColor: {r: 0, g: 1, b: 0.17089105, a: 0.65}
+  _gizmosColor: {r: 1, g: 0, b: 0, a: 0.65}
