@@ -1380,6 +1380,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: myhome_floor
       objectReference: {fileID: 0}
+    - target: {fileID: 6948931414123781817, guid: db1593757bcdd4f2a971111105fb1dd4, type: 3}
+      propertyPath: _moveDirection.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6948931414123781817, guid: db1593757bcdd4f2a971111105fb1dd4, type: 3}
+      propertyPath: _moveDirection.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8044756539217455983, guid: db1593757bcdd4f2a971111105fb1dd4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.35

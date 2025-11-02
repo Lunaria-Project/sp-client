@@ -9,7 +9,8 @@ public class MovableObject : MapObject
     [SerializeField] private Sprite[] _backSprites;
     [SerializeField] private MapConfig _config;
 
-    protected Vector2 MoveDirection;
+    public Vector2 MoveDirection { get; protected set; }
+    protected Vector2 ForceMoveDirection;
 
     private readonly RaycastHit2D[] _hitBuffer = new RaycastHit2D[8];
     private bool _isFacingFront;
@@ -37,6 +38,11 @@ public class MovableObject : MapObject
 
     #endregion
 
+    public void SetForceMoveDirection(Vector2 direction)
+    {
+        ForceMoveDirection = direction;
+    }
+
     private void InitMove()
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
@@ -54,25 +60,26 @@ public class MovableObject : MapObject
 
     private void UpdateSprite(float dt)
     {
-        if (MoveDirection.y > 0)
+        var moveDirection = ForceMoveDirection != Vector2.zero ? ForceMoveDirection : MoveDirection;
+        if (moveDirection.y > 0)
         {
             _isFacingFront = false;
         }
-        else if (MoveDirection.y < 0)
+        else if (moveDirection.y < 0)
         {
             _isFacingFront = true;
         }
 
-        if (MoveDirection.x > 0)
+        if (moveDirection.x > 0)
         {
             _spriteRenderer.flipX = false;
         }
-        else if (MoveDirection.x < 0)
+        else if (moveDirection.x < 0)
         {
             _spriteRenderer.flipX = true;
         }
 
-        if (MoveDirection == Vector2.zero)
+        if (moveDirection == Vector2.zero)
         {
             _spriteFrameTime = 0;
             _spriteIndex = 0;
@@ -93,9 +100,10 @@ public class MovableObject : MapObject
 
     private void UpdateMove(float dt)
     {
-        if (MoveDirection == Vector2.zero) return;
+        var moveDirection = ForceMoveDirection != Vector2.zero ? ForceMoveDirection : MoveDirection;
+        if (moveDirection == Vector2.zero) return;
 
-        var deltaPosition = MoveDirection * (dt * _config.PlayerSpeed);
+        var deltaPosition = moveDirection * (dt * _config.PlayerSpeed);
         for (var i = 0; i < _config.CollisionResolveCount; i++)
         {
             var deltaDistance = deltaPosition.magnitude;

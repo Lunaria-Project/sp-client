@@ -7,8 +7,6 @@ public class MyhomeMapManager : MonoBehaviour
     [SerializeField] private PlayerObject _player;
     [SerializeField] private int _sortingOrderOffset = 10;
 
-    private Vector2 _playerMoveDirection;
-
     private void Start()
     {
         SetMapObjectSortingLayer();
