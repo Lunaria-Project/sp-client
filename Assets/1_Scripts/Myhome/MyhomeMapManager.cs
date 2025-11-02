@@ -4,10 +4,19 @@ using UnityEngine;
 public class MyhomeMapManager : MonoBehaviour
 {
     [SerializeField] private MapObject[] _mapObjects;
+    [SerializeField] private PlayerObject _player;
+    [SerializeField] private int _sortingOrderOffset = 10;
+
+    private Vector2 _playerMoveDirection;
 
     private void Start()
     {
         SetMapObjectSortingLayer();
+    }
+
+    private void Update()
+    {
+        _player.SetSortingLayer(_sortingOrderOffset);
     }
 
     [Button]
@@ -15,7 +24,7 @@ public class MyhomeMapManager : MonoBehaviour
     {
         foreach (var mapObject in _mapObjects)
         {
-            mapObject.SetSortingLayer(10);
+            mapObject.SetSortingLayer(_sortingOrderOffset);
         }
     }
 }
