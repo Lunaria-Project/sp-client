@@ -10,4 +10,12 @@ namespace Generated
         Yellow = 4,
     }
 
+    [SerializeEnum]
+    public enum RequirementType
+    {
+        None = 0,
+        AlwaysFalse = 1,
+        AlwaysTrue = 2,
+    }
+
 }

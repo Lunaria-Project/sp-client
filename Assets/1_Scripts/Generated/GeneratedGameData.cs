@@ -13,4 +13,14 @@ namespace Generated
             IconResourceKey = iconResourceKey;
         }
     }
+
+    public partial class RequirementInfoData
+    {
+        public string RequirementType { get; private set; }
+
+        public RequirementInfoData(string requirementType)
+        {
+            RequirementType = requirementType;
+        }
+    }
 }

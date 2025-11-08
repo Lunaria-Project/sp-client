@@ -14,11 +14,22 @@ public partial class GameData
         }
     }
 
+    private void LoadRequirementInfoData(List<object[]> rows)
+    {
+        if (rows.IsNullOrEmpty()) return;
+        foreach (var row in rows)
+        {
+            var newData = new RequirementInfoData((row[0] as string) ?? string.Empty);
+            _dtRequirementInfoData.Add(newData.RequirementType, newData);
+        }
+    }
+
     private void InvokeLoadForSheet(string sheetName, List<object[]> rows)
     {
         switch (sheetName)
         {
             case "ItemData": LoadItemData(rows); break;
+            case "RequirementInfoData": LoadRequirementInfoData(rows); break;
         }
     }
 }
