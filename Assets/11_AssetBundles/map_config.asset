@@ -16,3 +16,5 @@ MonoBehaviour:
   _playerSpeed: 5
   _frameDuration: 0.09
   _collisionResolveCount: 3
+  _slidePush: 0.001
+  _npcMenuDistance: 2
