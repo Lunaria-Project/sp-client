@@ -3,7 +3,7 @@ using UnityEngine;
 public class MovableObject : MapObject
 {
     [Header("[Move]")] [SerializeField] private Rigidbody2D _rigidbody2D;
-    [SerializeField] private ContactFilter2D contactFilter;
+    [SerializeField] private ContactFilter2D _contactFilter;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Sprite[] _frontSprites;
     [SerializeField] private Sprite[] _backSprites;
@@ -54,12 +54,17 @@ public class MovableObject : MapObject
     private void InitSprite()
     {
         _spriteIndex = 0;
-        _spriteRenderer.sprite = _frontSprites[_spriteIndex];
+        if (_frontSprites.Length > 0)
+        {
+            _spriteRenderer.sprite = _frontSprites[_spriteIndex];
+        }
         _spriteFrameTime = 0;
     }
 
     private void UpdateSprite(float dt)
     {
+        if (_frontSprites.Length == 0 || _backSprites.Length == 0) return;
+
         var moveDirection = ForceMoveDirection != Vector2.zero ? ForceMoveDirection : MoveDirection;
         if (moveDirection.y > 0)
         {
@@ -107,7 +112,7 @@ public class MovableObject : MapObject
         for (var i = 0; i < _config.CollisionResolveCount; i++)
         {
             var deltaDistance = deltaPosition.magnitude;
-            var collisionCount = _rigidbody2D.Cast(deltaPosition.normalized, contactFilter, _hitBuffer, deltaDistance + _config.CollisionMargin);
+            var collisionCount = _rigidbody2D.Cast(deltaPosition.normalized, _contactFilter, _hitBuffer, deltaDistance + _config.CollisionMargin);
             if (collisionCount == 0)
             {
                 _rigidbody2D.position += deltaPosition;
